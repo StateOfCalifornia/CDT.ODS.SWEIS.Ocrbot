@@ -1,0 +1,145 @@
+﻿<Window x:Class="CDT.OCRBot.UI.Views.CustomMessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OCRBot"
+        SizeToContent="Height"
+        Width="480"
+        MinWidth="400"
+        MaxWidth="600"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <!-- Modern Button Style -->
+        <Style x:Key="MessageBoxButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="MinWidth" Value="70"/>
+            <Setter Property="Padding" Value="14,0"/>
+            <Setter Property="Margin" Value="6,0,0,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.75"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="White"
+            CornerRadius="8"
+            BorderBrush="#B0BEC5"
+            BorderThickness="1.5">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" BlurRadius="30" ShadowDepth="5" Opacity="0.2"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header with Icon and Title -->
+            <Border Grid.Row="0"
+                    x:Name="headerBorder"
+                    Background="#F5F7FA"
+                    BorderBrush="#E0E0E0"
+                    BorderThickness="0,0,0,1"
+                    CornerRadius="8,8,0,0"
+                    Padding="16,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Icon Circle -->
+                    <Border Grid.Column="0"
+                            x:Name="iconBorder"
+                            Width="24"
+                            Height="24"
+                            CornerRadius="12"
+                            Background="#E3F2FD"
+                            VerticalAlignment="Center"
+                            Margin="0,0,8,0">
+                        <TextBlock x:Name="iconTextBlock"
+                                   Text="ℹ"
+                                   FontSize="14"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="#2196F3"
+                                   FontWeight="Bold"/>
+                    </Border>
+
+                    <!-- Title -->
+                    <TextBlock Grid.Column="1"
+                               x:Name="titleTextBlock"
+                               Text="Information"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Foreground="#2C3E50"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"/>
+                </Grid>
+            </Border>
+
+            <!-- Message Content -->
+            <Border Grid.Row="1" Padding="20,16">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              MaxHeight="350"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <TextBlock x:Name="messageTextBlock"
+                               Text="Message goes here"
+                               FontSize="13"
+                               Foreground="#546E7A"
+                               TextWrapping="Wrap"
+                               LineHeight="19"/>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Separator Line -->
+            <Border Grid.Row="2"
+                    Height="1"
+                    Background="#E0E0E0"
+                    Margin="0"/>
+
+            <!-- Buttons -->
+            <Border Grid.Row="3"
+                    Background="#FAFAFA"
+                    CornerRadius="0,0,8,8"
+                    Padding="16,10">
+                <StackPanel x:Name="buttonPanel"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <!-- Buttons will be added dynamically -->
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

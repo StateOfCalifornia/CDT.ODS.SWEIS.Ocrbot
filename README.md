@@ -1,3 +1,28 @@
+OCRBot
+OCRBOt application is File Access Remediation batch tool for embedding OCR text into scanned documents
+
+#Local Host OCRBot Developer Setup
+
+Software Prerequisites
+
+Download the latest version of git
+
+Visual Studio 2022
+Downloading and installing will also install needed .NET CORE 8 SDK.
+Any edition will suffice but 'Enterprise' will provide the most robust experience.
+Please add the following components when initially installing.
+
+
+
+
+Require Azure Subscription with Open AI and Document Intelligence endpoints
+Add the endpoint and API key in the settings
+Name the Azure Open AI deployment name as "ocrbot-tagging"
+
+
+
+
+
 # Install Instructions for OCRBot desktop app
 
 
