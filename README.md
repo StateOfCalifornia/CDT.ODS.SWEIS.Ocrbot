@@ -1,5 +1,4 @@
-OCRBot
-OCRBOt application is File Access Remediation batch tool for embedding OCR text into scanned documents
+OCRBot application is File Access Remediation batch tool for embedding OCR text into scanned documents
 
 #Local Host OCRBot Developer Setup
 
@@ -10,7 +9,6 @@ Download the latest version of git
 Visual Studio 2022
 Downloading and installing will also install needed .NET CORE 8 SDK.
 Any edition will suffice but 'Enterprise' will provide the most robust experience.
-Please add the following components when initially installing.
 
 
 
