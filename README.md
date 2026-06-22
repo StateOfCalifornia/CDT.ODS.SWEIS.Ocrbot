@@ -32,5 +32,5 @@ It uses **Azure AI Document Intelligence** to extract text from scanned PDFs and
 2. Launch the `.msi` file to install the OCRBot application.
 3. Launch the application from the Start menu.
 4. Go to the **Settings** menu and configure the Azure services endpoints (Document Intelligence and, if using auto-tagging, OpenAI).
-5. Configure default input/output directories (optional).
+5. Configure default input/output directories.
 6. Start using the application.
