@@ -6,7 +6,7 @@ It uses **Azure AI Document Intelligence** to extract text from scanned PDFs and
 
 ---
 
-# Local Host OCRBot Developer Setup
+# OCRBot Developer Setup
 
 ## Software Prerequisites
 
