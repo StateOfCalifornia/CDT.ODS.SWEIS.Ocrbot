@@ -15,7 +15,6 @@ It uses **Azure AI Document Intelligence** to extract text from scanned PDFs and
   - Downloading and installing will also install the needed **.NET 8 SDK**.
   - Any edition will suffice, but **Enterprise** will provide the most robust experience.
   - Required workload: **.NET desktop development**
-  - Required extension: **Microsoft Visual Studio Installer Projects** (needed to build the `OCRBot Setup` project that produces `OCRBotSetup.msi`)
 
 ## Azure Prerequisites
 
