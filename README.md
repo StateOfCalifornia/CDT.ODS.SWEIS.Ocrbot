@@ -13,7 +13,7 @@ It uses **Azure AI Document Intelligence** to extract text from scanned PDFs and
 - Download the latest version of **Git**
 - **Visual Studio 2022** (17.14 or later)
   - Downloading and installing will also install the needed **.NET 8 SDK**.
-  - Any edition will suffice, but **Enterprise** will provide the most robust experience.
+  - Any edition of Visual Studio will suffice, but **Enterprise** will provide the most robust experience.
   - Required workload: **.NET desktop development**
 
 ## Azure Prerequisites
