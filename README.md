@@ -26,11 +26,6 @@ It uses **Azure AI Document Intelligence** to extract text from scanned PDFs and
 > OpenAI credentials are only required when the **Auto-Tag** feature is enabled.
 
 
-Clone the repository
-git clone https://github.com/StateOfCalifornia/CDT.ODS.SWEIS.Ocrbot.git 
-cd CDT.ODS.SWEIS.Ocrbot\CDT.OCRBot
-
-
 # Install Instructions for OCRBot desktop app
 
 1. Download the Windows Installer file **`OCRBotSetup.msi`**.
