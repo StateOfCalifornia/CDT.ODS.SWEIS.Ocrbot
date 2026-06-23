@@ -1,0 +1,698 @@
+﻿
+<Window x:Class="CDT.OCRBot.UI.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OCRBot Settings"
+        Height="730"
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        MinHeight="600"
+        MinWidth="650"
+        Background="#F5F7FA"
+        Icon="/Resources/app_icon.ico">
+
+    <Window.Resources>
+        <!-- Modern Expander Style -->
+        <Style x:Key="ModernExpanderStyle" TargetType="Expander">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Expander">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10"
+                                SnapsToDevicePixels="True">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#000000" BlurRadius="15" ShadowDepth="2" Opacity="0.08"/>
+                            </Border.Effect>
+                            <DockPanel>
+                                <!-- Header -->
+                                <ToggleButton x:Name="HeaderSite"
+                                            DockPanel.Dock="Top"
+                                            IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Padding="16,14"
+                                            HorizontalContentAlignment="Left"
+                                            Cursor="Hand">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    Padding="{TemplateBinding Padding}"
+                                                    CornerRadius="10,10,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ContentPresenter Grid.Column="0"
+                                                                    HorizontalAlignment="Left"
+                                                                    VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1"
+                                                             Text="▼"
+                                                             FontSize="12"
+                                                             Foreground="#546E7A"
+                                                             VerticalAlignment="Center"
+                                                             RenderTransformOrigin="0.5,0.5">
+                                                        <TextBlock.RenderTransform>
+                                                            <RotateTransform x:Name="ArrowRotation" Angle="0"/>
+                                                        </TextBlock.RenderTransform>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#F5F7FA"/>
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Trigger.EnterActions>
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <DoubleAnimation Storyboard.TargetName="ArrowRotation"
+                                                                               Storyboard.TargetProperty="Angle"
+                                                                               To="180"
+                                                                               Duration="0:0:0.2"/>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </Trigger.EnterActions>
+                                                    <Trigger.ExitActions>
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <DoubleAnimation Storyboard.TargetName="ArrowRotation"
+                                                                               Storyboard.TargetProperty="Angle"
+                                                                               To="0"
+                                                                               Duration="0:0:0.2"/>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </Trigger.ExitActions>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                    <ContentPresenter ContentSource="Header"/>
+                                </ToggleButton>
+
+                                <!-- Content -->
+                                <Border x:Name="ContentSite"
+                                        DockPanel.Dock="Top"
+                                        Visibility="Collapsed"
+                                        Padding="16,0,16,16">
+                                    <ContentPresenter/>
+                                </Border>
+                            </DockPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Expander Header Style -->
+        <Style x:Key="ExpanderHeaderStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+        </Style>
+
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#0288D1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0277BD"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#01579B"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Card Style -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" BlurRadius="15" ShadowDepth="2" Opacity="0.08"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Section Header Style -->
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+
+        <!-- Field Label Style -->
+        <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <!-- Helper Text Style -->
+        <Style x:Key="HelperTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="#607D8B"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <!-- TextBox Style -->
+        <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="#CFD8DC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                        Margin="0"
+                                        VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#90A4AE"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#0288D1"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                            <Trigger Property="IsReadOnly" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FAFAFA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- PasswordBox Style -->
+        <Style x:Key="ModernPasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="#CFD8DC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                        Margin="0"
+                                        VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#90A4AE"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#0288D1"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- CheckBox Style -->
+        <Style x:Key="ModernCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="checkBorder"
+                                    Grid.Column="0"
+                                    Width="20"
+                                    Height="20"
+                                    Background="White"
+                                    BorderBrush="#CFD8DC"
+                                    BorderThickness="2"
+                                    CornerRadius="4"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,8,0">
+                                <TextBlock x:Name="checkMark"
+                                          Text="✓"
+                                          FontSize="14"
+                                          FontWeight="Bold"
+                                          Foreground="#0288D1"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1"
+                                            VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="checkMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="checkBorder" Property="BorderBrush" Value="#0288D1"/>
+                                <Setter TargetName="checkBorder" Property="Background" Value="#E3F2FD"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="checkBorder" Property="BorderBrush" Value="#0288D1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Height="55">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#2C3E50" Offset="0"/>
+                    <GradientStop Color="#34495E" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" BlurRadius="10" ShadowDepth="2" Opacity="0.2"/>
+            </Border.Effect>
+
+            <Grid Margin="20,0">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="⚙️ Settings"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+                    <TextBlock Text="Configure Azure services and default directories"
+                               FontSize="11"
+                               Foreground="#BDC3C7"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,12">
+            <StackPanel>
+
+                <!-- Feature Options Section -->
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <!-- Enable Text Extraction Export -->
+                        <CheckBox x:Name="chkEnableTextDump"
+                                  Style="{StaticResource ModernCheckBoxStyle}"
+                                  Margin="0,0,0,10">
+                            <StackPanel>
+                                <TextBlock Text="EnableText Extraction Export"
+                                          FontSize="13"
+                                          FontWeight="Medium"
+                                          Foreground="#2C3E50"/>
+                                <TextBlock Text="When enabled, extracted OCR text will be saved as a separate .txt file alongside the processed PDF"
+                                          FontSize="10"
+                                          Foreground="#7F8C8D"
+                                          TextWrapping="Wrap"
+                                          Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </CheckBox>
+
+                        <!-- Enable Auto-Tagging Feature -->
+                        <CheckBox x:Name="chkEnableAutoTag"
+                                  Style="{StaticResource ModernCheckBoxStyle}"
+                                  Checked="ChkEnableAutoTag_Changed"
+                                  Unchecked="ChkEnableAutoTag_Changed">
+                            <StackPanel>
+                                <TextBlock Text="Enable Auto-Tagging"
+                                          FontSize="13"
+                                          FontWeight="Medium"
+                                          Foreground="#2C3E50"/>
+                                <TextBlock Text="When enabled, allows automatic tagging of PDF documents using Azure OpenAI. This will show the Auto Tag option in the main window and require Azure OpenAI configuration below."
+                                          FontSize="10"
+                                          Foreground="#7F8C8D"
+                                          TextWrapping="Wrap"
+                                          Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </CheckBox>
+                    </StackPanel>
+                </Border>
+
+                <!-- Default Directories Section -->
+                <Expander x:Name="expanderDirectories"
+                          IsExpanded="False"
+                          Style="{StaticResource ModernExpanderStyle}"
+                          Expanded="Expander_Expanded">
+                    <Expander.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📁 Set Input/Output Directories"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="#2C3E50"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Expander.Header>
+                    <StackPanel Margin="0,6,0,0">
+                        <!-- Input Directory -->
+                        <TextBlock Text="Input Directory *"
+                                   Style="{StaticResource FieldLabelStyle}"/>
+                        <TextBlock Text="When browsing for files, this directory will be shown first"
+                                   Style="{StaticResource HelperTextStyle}"/>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="txtDefaultInputDirectory"
+                                     Grid.Column="0"
+                                     Style="{StaticResource ModernTextBoxStyle}"
+                                     IsReadOnly="True"
+                                     Margin="0,0,10,0"/>
+                            <Button x:Name="btnBrowseInputDirectory"
+                                    Grid.Column="1"
+                                    Content="📂 Browse"
+                                    Width="110"
+                                    Height="36"
+                                    Click="BtnBrowseInputDirectory_Click"
+                                    Style="{StaticResource ModernButtonStyle}"/>
+                        </Grid>
+                        <TextBlock x:Name="txtDefaultInputDirectoryError"
+                                   Foreground="#E74C3C"
+                                   FontSize="11"
+                                   Margin="0,2,0,12"
+                                   Visibility="Collapsed"/>
+
+                        <!-- Output Directory -->
+                        <TextBlock Text="Output Directory *"
+                                   Style="{StaticResource FieldLabelStyle}"/>
+                        <TextBlock Text="Processed PDFs will be saved here by default"
+                                   Style="{StaticResource HelperTextStyle}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="txtDefaultOutputDirectory"
+                                     Grid.Column="0"
+                                     Style="{StaticResource ModernTextBoxStyle}"
+                                     IsReadOnly="True"
+                                     Margin="0,0,10,0"/>
+                            <Button x:Name="btnBrowseOutputDirectory"
+                                    Grid.Column="1"
+                                    Content="📂 Browse"
+                                    Width="110"
+                                    Height="36"
+                                    Click="BtnBrowseOutputDirectory_Click"
+                                    Style="{StaticResource ModernButtonStyle}"/>
+                        </Grid>
+                        <TextBlock x:Name="txtDefaultOutputDirectoryError"
+                                   Foreground="#E74C3C"
+                                   FontSize="11"
+                                   Margin="0,2,0,0"
+                                   Visibility="Collapsed"/>
+                    </StackPanel>
+                </Expander>
+
+                <!-- Azure Document Intelligence Section -->
+                <Expander x:Name="expanderOCR"
+                          IsExpanded="False"
+                          Style="{StaticResource ModernExpanderStyle}"
+                          Expanded="Expander_Expanded">
+                    <Expander.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="☁️ Azure Document Intelligence"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="#2C3E50"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Expander.Header>
+                    <StackPanel Margin="0,6,0,0">
+                        <StackPanel>
+                            <!-- Endpoint -->
+                            <TextBlock Text="Endpoint *"
+                                       Style="{StaticResource FieldLabelStyle}"/>
+                            <TextBox x:Name="txtOCREndpoint"
+                                     Style="{StaticResource ModernTextBoxStyle}"
+                                     Margin="0,0,0,4"
+                                     ToolTip="e.g., https://your-resource.cognitiveservices.azure.com/"/>
+                            <TextBlock x:Name="txtOCREndpointError"
+                                       Foreground="#E74C3C"
+                                       FontSize="11"
+                                       Margin="0,2,0,8"
+                                       Visibility="Collapsed"/>
+
+                            <!-- API Key -->
+                            <TextBlock Text="API Key *"
+                                       Style="{StaticResource FieldLabelStyle}"/>
+                            <PasswordBox x:Name="txtOCRApiKey"
+                                         Style="{StaticResource ModernPasswordBoxStyle}"
+                                         Margin="0,0,0,4"/>
+                            <TextBlock x:Name="txtOCRApiKeyError"
+                                       Foreground="#E74C3C"
+                                       FontSize="11"
+                                       Margin="0,2,0,8"
+                                       Visibility="Collapsed"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Expander>
+
+                <!-- Azure OpenAI Section -->
+                <Expander x:Name="expanderTagging"
+                          IsExpanded="False"
+                          Style="{StaticResource ModernExpanderStyle}"
+                          Expanded="Expander_Expanded"
+                          Visibility="Collapsed">
+                    <Expander.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="◈ Azure OpenAI"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="#2C3E50"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Expander.Header>
+                    <StackPanel Margin="0,6,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Endpoint *"
+                                       Style="{StaticResource FieldLabelStyle}"/>
+                            <TextBox x:Name="txtTaggingEndpoint"
+                                     Style="{StaticResource ModernTextBoxStyle}"
+                                     Margin="0,0,0,4"
+                                     ToolTip="e.g., https://your-openai.openai.azure.com/"/>
+                            <TextBlock x:Name="txtTaggingEndpointError"
+                                       Foreground="#E74C3C"
+                                       FontSize="11"
+                                       Margin="0,2,0,8"
+                                       Visibility="Collapsed"/>
+
+                            <TextBlock Text="API Key *"
+                                       Style="{StaticResource FieldLabelStyle}"/>
+                            <PasswordBox x:Name="txtTaggingApiKey"
+                                         Style="{StaticResource ModernPasswordBoxStyle}"
+                                         Margin="0,0,0,4"/>
+                            <TextBlock x:Name="txtTaggingApiKeyError"
+                                       Foreground="#E74C3C"
+                                       FontSize="11"
+                                       Margin="0,2,0,8"
+                                       Visibility="Collapsed"/>
+
+                            <TextBlock Text="Deployment Name *"
+                                       Style="{StaticResource FieldLabelStyle}"/>
+                            <TextBox x:Name="txtDeploymentName"
+                                     Style="{StaticResource ModernTextBoxStyle}"
+                                     Margin="0,0,0,4"
+                                     ToolTip="e.g., gpt-4"/>
+                            <TextBlock x:Name="txtDeploymentNameError"
+                                       Foreground="#E74C3C"
+                                       FontSize="11"
+                                       Margin="0,2,0,8"
+                                       Visibility="Collapsed"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Expander>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer Buttons -->
+        <Border Grid.Row="2" Background="White" Padding="20,12" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" BlurRadius="10" ShadowDepth="-2" Opacity="0.1" Direction="90"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Status Text -->
+                <TextBlock x:Name="txtStatus"
+                           Grid.Column="0"
+                           Text=""
+                           FontSize="12"
+                           Foreground="#0288D1"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="0,0,20,0"/>
+
+                <!-- Buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="btnClearSettings"
+                        Content="🗑️ Clear All"
+                        Width="120"
+                        Height="38"
+                        Margin="0,0,10,0"
+                        Click="BtnClearSettings_Click"
+                        Style="{StaticResource ModernButtonStyle}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="#FF9800"
+                                    CornerRadius="6"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#F57C00"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#E65100"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button x:Name="btnCancel"
+                        Content="Cancel"
+                        Width="100"
+                        Height="38"
+                        Margin="0,0,10,0"
+                        Click="BtnCancel_Click"
+                        Style="{StaticResource ModernButtonStyle}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="#78909C"
+                                    CornerRadius="6"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#607D8B"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#546E7A"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button x:Name="btnSave"
+                        Content="💾 Save Settings"
+                        Width="150"
+                        Height="38"
+                        Click="BtnSave_Click"
+                        Style="{StaticResource ModernButtonStyle}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="#43A047"
+                                    CornerRadius="6"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#388E3C"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#2E7D32"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Background" Value="#BDC3C7"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
